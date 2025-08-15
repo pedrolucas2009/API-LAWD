@@ -6,8 +6,9 @@ const app = express();
 app.use(express.json());
 
 const bdDeErick = require('./bdDeErick')
-const api = require('./api')
-const middleware = require('./middleware')
+const { verificarToken, verificarCargo } = require('./middleware')
+
+require('./api')({ app, bdDeErick, jwt, verificarToken, verificarCargo })
 
 app.listen(8000)
 
