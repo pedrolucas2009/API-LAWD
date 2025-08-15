@@ -28,4 +28,13 @@ app.post('/login', (req, res) => {
 res.status(401).json({message: 'Credenciais inválidas. Vá embora tomar vermífugo.'})
 })
 
+app.get('/segredinho/vermes', verificarToken, (req, res) => {
+    console.log('Acesso permitido para:', req.user);
+    res.json(bdDeErick.vermes);
+});
+
+app.get('/segredao/caracteristicas', verificarToken, verificarCargo('erick'), (req, res) => {
+    res.json(bdDeErick.caracteristicas);
+});
+
 module.exports = api
