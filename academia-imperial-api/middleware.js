@@ -1,20 +1,20 @@
+const jwt = require('jsonwebtoken');
 
-function verificarToken(req, rest, next){
+function verificarToken(req, res, next){
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split('')[1];
+    if (!token){
+        return res.status(401).json({message: 'Acesso negado. Token não fornecido.'})
+    }
 
-     if (!token){
-         return rest.status(401).json({message: 'Acesso negado. Token não fornecido.'})
-     }
-
-     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-         if (err) {
-             return rest.status(403).json({message:'Token inválido ou expirado.'})
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) {
+            return res.status(403).json({message:'Token inválido ou expirado.'})
         }
-         req.user = decoded;
-         next()
-     })
-     }
+        req.user = decoded;
+        next()
+    })
+}
 
 function verificarCargo(cargoExigido) {
     return (req, res, next) => {
@@ -27,4 +27,4 @@ function verificarCargo(cargoExigido) {
     };
 }
 
- module.exports = middleware
+module.exports = { verificarToken, verificarCargo };
